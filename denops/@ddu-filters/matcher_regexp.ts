@@ -15,7 +15,6 @@ function charposToBytepos(input: string, pos: number): number {
 }
 
 export class Filter extends BaseFilter<Params> {
-  // deno-lint-ignore require-await
   override async filter(args: {
     denops: Denops;
     sourceOptions: SourceOptions;
