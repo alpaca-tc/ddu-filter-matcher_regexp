@@ -105,10 +105,7 @@ export class Filter extends BaseFilter<Params> {
           ...item,
           highlights: highlights,
         });
-      }).map((x) => {
-        console.log({ x: x.display ?? x.word, h: x.highlights });
-        return x;
-      }),
+      })
     );
   }
 
