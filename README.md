@@ -1,8 +1,8 @@
-# ddu-filter-matcher_substring
+# ddu-filter-matcher_regexp
 
-Substring matcher for ddu.vim
+RegExp matcher for ddu.vim
 
-This matcher filters substring matched items.
+This matcher filters regexp matched items.
 
 ## Required
 
@@ -20,7 +20,7 @@ https://github.com/Shougo/ddu.vim
 call ddu#custom#patch_global(#{
     \   sourceOptions: #{
     \     _: #{
-    \       matchers: ['matcher_substring'],
+    \       matchers: ['matcher_regexp'],
     \     },
     \   }
     \ })
@@ -29,7 +29,7 @@ call ddu#custom#patch_global(#{
 " Note: It is slow
 call ddu#custom#patch_global(#{
     \   filterParams: #{
-    \     matcher_substring: #{
+    \     matcher_regexp: #{
     \       highlightMatched: 'Search',
     \     },
     \   }
