@@ -58,8 +58,11 @@ export class Filter extends BaseFilter<Params> {
     let filteredLen = 0;
 
     for (const item of items) {
+      // reset lastIndex
+      patterns.forEach((x) => x.lastIndex = 0);
+
       const matched = patterns.every((pattern) =>
-        item.matcherKey.match(pattern)
+        pattern.test(item.matcherKey)
       );
 
       if (matched) {
@@ -105,7 +108,7 @@ export class Filter extends BaseFilter<Params> {
           ...item,
           highlights: highlights,
         });
-      })
+      }),
     );
   }
 
