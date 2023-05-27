@@ -7,6 +7,7 @@ import { Denops } from "https://deno.land/x/ddu_vim@v2.0.0/deps.ts";
 
 type Params = {
   highlightMatched: string;
+  nevativeRegexpPrefix: string;
   limit: number;
 };
 
@@ -36,10 +37,24 @@ export class Filter extends BaseFilter<Params> {
       x.replaceAll(/\\(?=\s)/g, "")
     );
     const patterns: RegExp[] = [];
+    const negativePatterns: RegExp[] = [];
 
     for (const input of inputs) {
       try {
-        patterns.push(new RegExp(input, flag));
+        if (
+          args.filterParams.nevativeRegexpPrefix &&
+          input.startsWith(args.filterParams.nevativeRegexpPrefix)
+        ) {
+          const withoutPrefix = input.substring(
+            args.filterParams.nevativeRegexpPrefix.length,
+          );
+
+          if (withoutPrefix.length > 0) {
+            negativePatterns.push(new RegExp(withoutPrefix, flag));
+          }
+        } else {
+          patterns.push(new RegExp(input, flag));
+        }
       } catch (e) {
         if (e instanceof SyntaxError) {
           await args.denops.call(
@@ -59,10 +74,14 @@ export class Filter extends BaseFilter<Params> {
     for (const item of items) {
       // reset lastIndex
       patterns.forEach((x) => x.lastIndex = 0);
+      negativePatterns.forEach((x) => x.lastIndex = 0);
 
-      const matched = patterns.every((pattern) =>
-        pattern.test(item.matcherKey)
+      const notMatched = negativePatterns.every((pattern) =>
+        !pattern.test(item.matcherKey)
       );
+
+      const matched = notMatched &&
+        patterns.every((pattern) => pattern.test(item.matcherKey));
 
       if (matched) {
         filtered.push(item);
@@ -114,6 +133,7 @@ export class Filter extends BaseFilter<Params> {
   override params(): Params {
     return {
       highlightMatched: "",
+      nevativeRegexpPrefix: "!",
       limit: 1000,
     };
   }

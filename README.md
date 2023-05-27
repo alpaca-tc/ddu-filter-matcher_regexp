@@ -34,4 +34,13 @@ call ddu#custom#patch_global(#{
     \     },
     \   }
     \ })
+
+" Reject matched item if input starts with `!`.
+call ddu#custom#patch_global(#{
+    \   filterParams: #{
+    \     matcher_regexp: #{
+    \       nevativeRegexpPrefix: '!';
+    \     },
+    \   }
+    \ })
 ```
